@@ -24,6 +24,7 @@ export const postCall = async (endPoint: string, data: unknown) => {
         } else {
             toast.error("Something went wrong")
         }
+        return { status: "error" }
     }
 }
 
@@ -47,6 +48,20 @@ export const getCall = async (endPoint: string) => {
             toast.error(error.response?.data?.message ?? "Something went wrong")
         } else {
             toast.error("Something went wrong")
+        }
+    }
+}
+
+export const tmdbGetCall = async (endPoint: string) => {
+    try {
+        const response = await axios.get(`https://api.themoviedb.org/3/${endPoint}?api_key=${import.meta.env.VITE_TMDB_KEY}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        if (axios.isAxiosError(error)) {
+            console.error(error.response?.data?.message ?? "Something went wrong")
+        } else {
+            console.error("Something went wrong")
         }
     }
 }

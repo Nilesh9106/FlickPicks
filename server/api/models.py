@@ -42,6 +42,7 @@ class WatchHistory(models.Model):
 
     class Meta:
         unique_together = ('user', 'movie',)
+    
     def __str__(self):
         return str(self.movie.title) + ' - ' + str(self.user.username)
 

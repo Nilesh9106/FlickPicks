@@ -107,6 +107,6 @@ def watch_recommend(user):
     
     for movie in recommendations:
         m = Movie.objects.get(id=movie['id'])
-        m.fav = Favorite.objects.filter(user=user,movie=m).exists()
+        m.isFavorite = Favorite.objects.filter(user=user,movie=m).exists()
         movies.append(model_to_dict(m))
     return movies

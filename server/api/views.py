@@ -16,17 +16,17 @@ def allMovies(request):
     q = request.query_params.get("q")
     if q is not None:
         movies = Movie.objects.filter(Q(title__icontains=q) | Q(keywords__icontains=q))
-        serializers = MovieSerializer(movies,many=True)
+        serializers = MovieSerializer(movies,many=True,context={"request":request})
         return Response({'status':"success","movies":serializers.data},status=status.HTTP_200_OK)
     
     latest = Movie.objects.filter(status='Released').order_by('-release_date')[:20]
     action = Movie.objects.filter(status='Released',genres__icontains='Action').order_by('-popularity')[:20]
     bio = Movie.objects.filter(Q(keywords__icontains='biography') | Q(keywords__icontains='biopic')).order_by('-popularity')[:20]
-    serializers = MovieSerializer(latest, many=True)  
+    serializers = MovieSerializer(latest, many=True,context={"request":request})  
     latest = serializers.data
-    serializers = MovieSerializer(action, many=True)
+    serializers = MovieSerializer(action, many=True,context={"request":request})
     action = serializers.data
-    serializers = MovieSerializer(bio,many=True)
+    serializers = MovieSerializer(bio,many=True,context={"request":request})
     bio = serializers.data
     return Response({'status': 'success', "latest":latest,"action":action,"bio":bio}, status=status.HTTP_200_OK)
 
@@ -41,7 +41,7 @@ def recommendMovies(request):
 @permission_classes([IsAuthenticated])
 def favorites(request):
     movies = Favorite.objects.filter(user=request.user)
-    serializers = FavoriteSerializer(movies,many=True)
+    serializers = FavoriteSerializer(movies,many=True,context={"request":request})
     return Response({"status":"success","movies":serializers.data},status=status.HTTP_200_OK)
 
 @api_view(['POST'])
@@ -79,15 +79,28 @@ def movieView(request,movie_id):
     movie = Movie.objects.filter(id=movie_id).first()
     if movie is None:
         return Response({"status":"failed","message":"movie not found"},status=status.HTTP_404_NOT_FOUND)
-    serializers = MovieSerializer(movie)
-    return Response({"status":"success","movie":serializers.data},status=status.HTTP_200_OK)
+    if(request.user.is_authenticated):
+        watch = WatchHistory.objects.filter(user=request.user,movie=Movie.objects.get(id=movie_id)).first()
+        if watch:
+            watch.added = date.today()
+            watch.save()
+        else:
+            WatchHistory.objects.create(user=request.user,movie=Movie.objects.get(id=movie_id))
+    data = search_similar_movies(movie_id)
+    recommendations = []
+    for m1 in data['recommendations']:
+        m = Movie.objects.get(id=m1['id'])
+        m = MovieSerializer(m,context={"request":request}).data
+        recommendations.append(m)
+
+    serializers = MovieSerializer(movie,context={"request":request})
+    return Response({"status":"success","movie":serializers.data,'recommendations':recommendations},status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def history_view(request):
     histories = WatchHistory.objects.filter(user=request.user).order_by('-added')
-    print(histories)
-    serializers = WatchHistorySerializer(histories,many=True)
+    serializers = WatchHistorySerializer(histories,many=True,context={"request":request})
     return Response({"status":"success","histories":serializers.data},status=status.HTTP_200_OK)
 
 

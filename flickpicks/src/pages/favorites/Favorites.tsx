@@ -9,6 +9,7 @@ type Movie = {
     poster_path: string,
     release_date: string,
     genres: string,
+    isFavorite: boolean
 }
 type Favorites = {
     id: number,
@@ -26,8 +27,6 @@ export default function Favorites() {
         setLoading(false)
         if (data?.status == "success") {
             setFavorites(data.movies)
-            console.log(data.movies);
-
         }
     }
 
@@ -41,7 +40,10 @@ export default function Favorites() {
             <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 grid-cols-2 sm:px-8 px-4 my-4">
                 {favorites.length == 0 && !loading && <div className="col-span-full text-xl my-5 text-center">No favorites yet</div>}
                 {favorites.map((movie: Favorites, i: number) => {
-                    return <MovieCard key={i} movie={movie.movie} />
+                    console.log(movie.movie);
+                    return <MovieCard key={i} movie={movie.movie} onDelete={() => {
+                        setFavorites(favorites.filter((fav: Favorites) => fav.id != movie.id))
+                    }} />
                 })}
             </div>
         </>

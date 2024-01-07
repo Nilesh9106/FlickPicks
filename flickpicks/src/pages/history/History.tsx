@@ -9,6 +9,7 @@ type Movie = {
     poster_path: string,
     release_date: string,
     genres: string,
+    isFavorite: boolean
 }
 
 type History = {
@@ -37,7 +38,7 @@ export default function History() {
     return (
         <>
             {loading && <Loading />}
-            <div className="grid lg:grid-cols-5 md:grid-cols-4 grid-cols-3">
+            <div className="grid lg:grid-cols-5 md:grid-cols-4 grid-cols-3 p-5 gap-3">
                 {Histories.length == 0 && !loading && <div className="col-span-full text-xl my-5 text-center">No Histories yet</div>}
                 {Histories.map((movie: History, i: number) => {
                     return <MovieCard key={i} movie={movie.movie} />

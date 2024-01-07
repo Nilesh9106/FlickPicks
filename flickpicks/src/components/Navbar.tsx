@@ -8,7 +8,7 @@ export default function Header() {
     const navigate = useNavigate();
     return (
         <>
-            <Navbar onMenuOpenChange={setIsMenuOpen} >
+            <Navbar onMenuOpenChange={setIsMenuOpen} className="dark:bg-neutral-950/70 bg-neutral-200/70">
                 <NavbarContent>
                     <NavbarMenuToggle
                         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
