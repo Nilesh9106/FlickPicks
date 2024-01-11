@@ -2,6 +2,7 @@ import React from "react";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem } from "@nextui-org/react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { SiGithub, SiTwitter } from "react-icons/si";
+import { AiOutlineSearch } from "react-icons/ai";
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -39,6 +40,11 @@ export default function Header() {
                     </NavbarItem>
                 </NavbarContent>
                 <NavbarContent justify="end">
+                    <NavbarItem>
+                        <Button as={Link} to={'/search'} isIconOnly>
+                            <AiOutlineSearch className="text-2xl" />
+                        </Button>
+                    </NavbarItem>
                     {localStorage.getItem("token") ? (
                         <NavbarItem>
                             <Button onClick={() => {
