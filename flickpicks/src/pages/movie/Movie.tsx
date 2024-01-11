@@ -14,23 +14,7 @@ type Movie = {
     genres: string,
     isFavorite: boolean
 }
-type MovieDetails = {
-    id: number,
-    title: string,
-    poster_path: string,
-    release_date: string,
-    genres: string,
-    isFavorite: boolean,
-    overview: string,
-    runtime: number,
-    tagline: string,
-    budget: number,
-    revenue: number,
-    keywords: string,
-    production_companies: string,
-    status: string,
-    vote_average: number,
-}
+
 
 type Video = {
     key: string,
@@ -41,12 +25,29 @@ type Video = {
     official: boolean,
     published_at: string,
 }
+type MovieDetails = {
+    id: number,
+    title: string,
+    poster_path: string,
+    release_date: string,
+    genres: [{ name: string }],
+    isFavorite: boolean,
+    overview: string,
+    runtime: number,
+    tagline: string,
+    budget: number,
+    revenue: number,
+    keywords: [{ name: string }],
+    production_companies: [{ name: string }],
+    status: string,
+    vote_average: number,
+    videos: { results: [Video] }
+}
 
 export default function Movie() {
     const [loading, setLoading] = useState(false)
     const [movie, setMovie] = useState<MovieDetails>()
     const [recommendations, setRecommendations] = useState([] as Movie[])
-    const [videos, setVideos] = useState([] as Video[])
     const { id } = useParams()
     useEffect(() => {
         fetchMovie();
@@ -57,17 +58,17 @@ export default function Movie() {
         setLoading(true);
         const data = await getCall(`movies/${id}`);
         if (data.status == "success") {
-            setMovie(data.movie);
             setRecommendations(data.recommendations);
-            const videos = await tmdbGetCall(`movie/${id}/videos`);
-            setVideos(videos.results);
+            const movies = await tmdbGetCall(`movie/${id}`, "append_to_response=videos");
+            console.log(movies);
+            setMovie(movies);
         }
         console.info("Movie fetched");
         setLoading(false);
     }
     return (
         loading ? <Loading /> : (
-            <div className="container lg:px-40 md:px-32 sm:px-10 px-3 w-full flex flex-col justify-center gap-2 py-4 ">
+            <div className="xl:px-32 md:px-20  sm:px-10 px-3 w-full flex flex-col justify-center gap-2 py-4 ">
                 <div className="flex justify-between my-2">
                     <div>
                         <h2 className="sm:text-4xl text-xl">{movie?.title}</h2>
@@ -80,18 +81,18 @@ export default function Movie() {
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex max-lg:flex-wrap gap-4">
                     <Image
                         radius="md"
                         alt="Movie"
                         isBlurred
                         className="object-cover sm:h-[25rem] max-sm:w-full pointer-events-none transition-all duration-500"
-                        src={movie?.poster_path}
+                        src={"https://image.tmdb.org/t/p/original" + movie?.poster_path}
                     />
                     {
-                        videos.length > 0 && <div className="">
+                        movie && movie.videos.results.length > 0 && <div className="">
                             <h2 className="md:hidden text-xl my-2">Video</h2>
-                            <iframe src={`https://www.youtube.com/embed/${videos[0]?.key}`} className="rounded-md sm:h-[25rem] max-sm:w-full aspect-video" ></iframe>
+                            <iframe src={`https://www.youtube.com/embed/${movie.videos.results[0]?.key}`} className="rounded-md sm:h-[20rem] xl:h-[25rem] max-sm:w-full aspect-video" ></iframe>
                         </div>
                     }
                 </div>
@@ -102,19 +103,19 @@ export default function Movie() {
 
                     <hr className="my-1" />
                     <h2 className="text-xl my-2">Genres</h2>
-                    <p className="text-medium max-sm:text-sm ">{movie?.genres}</p>
+                    <p className="text-medium max-sm:text-sm ">{movie?.genres.map((genre) => `${genre.name}, `)}</p>
 
                     {
-                        movie?.keywords && movie?.keywords != "0" && <>
+                        movie?.keywords && <>
                             <hr className="my-1" />
                             <h2 className="text-xl my-2">Keywords</h2>
-                            <p className="text-medium max-sm:text-sm ">{movie?.keywords}</p>
+                            <p className="text-medium max-sm:text-sm ">{movie?.keywords.map((keyword) => `${keyword.name}, `)}</p>
                         </>
                     }
 
                     <hr className="my-1" />
                     <h2 className="text-xl my-2">Production Companies</h2>
-                    <p className="text-medium max-sm:text-sm ">{movie?.production_companies}</p>
+                    <p className="text-medium max-sm:text-sm ">{movie?.production_companies.map((company) => `${company.name}, `)}</p>
 
                     <hr className="my-1" />
                     <h2 className="text-xl my-2">Status</h2>
