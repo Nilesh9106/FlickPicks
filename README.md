@@ -15,16 +15,16 @@ pip install virtualenv
 ```bash
 pip install -r requirements.txt
 ```
-4. run this command for making migrations
+3. run this command for making migrations
 ```bash
 python manage.py makemigrations
 ```
-5. run migrate command for store database changes
+4. run migrate command for store database changes
 
 ```bash
 python manage.py migrate
 ```
-7. Run the following command to add all movies from the CSV file to the database
+5. Run the following command to add all movies from the CSV file to the database
 ```bash
 python manage.py runscript addmovie
 ```
@@ -48,6 +48,7 @@ yarn install
 2. create .env file in flickpicks directory and add the following line to it
 ```bash
 VITE_API_URI=http://127.0.0.1:8000/api/
+VITE_TMDB_KEY=your_tmdb_key
 ```
 3. run the following command to start the frontend server
 ```bash

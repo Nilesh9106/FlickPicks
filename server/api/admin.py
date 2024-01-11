@@ -6,7 +6,7 @@ admin.site.register(WatchHistory)
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ("title", "release_date",'spoken_languages')
+    list_display = ("title", "release_date",'spoken_languages',"genres")
     list_filter = ("status","spoken_languages")
     search_fields = ("title",)
 

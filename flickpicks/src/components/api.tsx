@@ -52,9 +52,9 @@ export const getCall = async (endPoint: string) => {
     }
 }
 
-export const tmdbGetCall = async (endPoint: string) => {
+export const tmdbGetCall = async (endPoint: string, param?: string) => {
     try {
-        const response = await axios.get(`https://api.themoviedb.org/3/${endPoint}?api_key=${import.meta.env.VITE_TMDB_KEY}`);
+        const response = await axios.get(`https://api.themoviedb.org/3/${endPoint}?api_key=${import.meta.env.VITE_TMDB_KEY}&${param}`);
         return response.data;
     } catch (error) {
         console.log(error);
