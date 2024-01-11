@@ -9,6 +9,7 @@ type Movie = {
     poster_path: string,
     release_date: string,
     genres: string,
+    isFavorite:boolean
 }
 
 export default function Home() {

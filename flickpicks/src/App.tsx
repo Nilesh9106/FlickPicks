@@ -9,6 +9,7 @@ import "react-multi-carousel/lib/styles.css";
 import Favorites from "./pages/favorites/Favorites"
 import History from "./pages/history/History"
 import Movie from "./pages/movie/Movie"
+import Search from "./pages/search/Search"
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: 'movie/:id',
         element: <Movie />
+      },
+      {
+        path : 'search',
+        element: <Search />
       }
     ]
   },
