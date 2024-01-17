@@ -9,15 +9,15 @@ class Movie(models.Model):
     release_date = models.DateField(blank=True,null=True)
     revenue = models.IntegerField(null=True,blank=True)
     runtime = models.IntegerField(null=True,blank=True)
-    credit = models.CharField(max_length=255,null=True,blank=True)
+    credit = models.TextField()
     budget = models.IntegerField(null=True,blank=True)
     overview = models.TextField()
     popularity = models.FloatField(null=True,blank=True)
     poster_path = models.CharField(max_length=255)
     tagline = models.CharField(max_length=255,null=True,blank=True)
     genres = models.CharField(max_length=255,null=True,blank=True)
-    production_companies = models.CharField(max_length=255)
-    keywords = models.CharField(max_length=255)
+    production_companies = models.TextField()
+    keywords = models.TextField()
     spoken_languages = models.CharField(max_length=255)
 
     def __str__(self):
