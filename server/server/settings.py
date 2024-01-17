@@ -99,7 +99,6 @@ DATABASES = {
         'PORT': os.environ.get('PGPORT'),
     }
 }
-print(os.environ.get('PGPORT'))
 
 
 # Password validation

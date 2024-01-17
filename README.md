@@ -15,20 +15,21 @@ pip install virtualenv
 ```bash
 pip install -r requirements.txt
 ```
-3. run this command for making migrations
-```bash
-python manage.py makemigrations
-```
-4. run migrate command for store database changes
 
+3. create .env file in server directory and add the following lines to it
+```env
+POSTGRES_URL=<postgres url>
+PGNAME=
+PGUSER=
+POSTGRES_PASSWORD=
+PGHOST=
+PGPORT=
+```
+4. create a postgres database and add the database name, username, password, host, and port to the .env file
+5. run the following command to create the database tables
 ```bash
 python manage.py migrate
 ```
-5. Run the following command to add all movies from the CSV file to the database
-```bash
-python manage.py runscript addmovie
-```
-
 6. run this command to start the server
 ```bash
 python manage.py runserver
