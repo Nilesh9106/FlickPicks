@@ -46,7 +46,8 @@ def run():
         ) for row in movies.itertuples()]
     print("updating database...")
     for obj in objs:
-        Movie.objects.update_or_create(
+        try:
+            Movie.objects.update_or_create(
             id=obj.id,
             defaults={
                 'title':obj.title,
@@ -65,6 +66,8 @@ def run():
                 'spoken_languages':obj.spoken_languages,
                 'credit':obj.credit,
                 'keywords':obj.keywords
-            }
-        )
+                }
+            )
+        except Exception as e:
+            print(obj)
     print("database updated")
