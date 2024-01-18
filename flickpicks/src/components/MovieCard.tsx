@@ -25,7 +25,7 @@ export default function MovieCard({ movie, onDelete }: { movie: Movie, onDelete?
                     className="object-cover w-full pointer-events-none group-hover:scale-105 transition-all duration-500"
                     src={movie.poster_path}
                 />
-                <div className="absolute group-hover:bottom-0 -bottom-8 max-sm:-bottom-7 transition-all w-full  z-50 p-3 bg-neutral-200/20 dark:bg-neutral-900/20 backdrop-blur-md rounded-t-lg ">
+                <div className="absolute group-hover:bottom-0 -bottom-8 max-sm:-bottom-7 transition-all w-full  z-50 p-3 bg-neutral-200/70 dark:bg-neutral-900/20 backdrop-blur-md rounded-t-lg ">
                     <div className="text-lg max-sm:text-sm font-bold line-clamp-1">{movie.title}</div>
                     <div className="text-sm max-sm:text-xs">{movie.release_date}</div>
                     <div className="text-sm line-clamp-1 max-sm:text-xs">{movie.genres}</div>
@@ -38,7 +38,7 @@ export default function MovieCard({ movie, onDelete }: { movie: Movie, onDelete?
                         e.preventDefault();
                         e.stopPropagation();
                         if (loading) return;
-                        setLoading(true);
+                        setLoading(true);   
                         if (isFav) {
                             const data = await postCall('movies/removeFromFav', { movie_id: movie.id });
                             if (data.status == "success") {
