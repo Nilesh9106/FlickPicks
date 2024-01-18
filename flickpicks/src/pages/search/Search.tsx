@@ -226,7 +226,7 @@ export default function Search() {
             </div>
             {loading && <Loading />}
             {!loading && <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 grid-cols-2 sm:px-8 px-4 my-4 gap-3">
-                {movies.length == 0 && !loading && <div className="col-span-full text-xl my-5 text-center">No favorites yet</div>}
+                {movies.length == 0 && !loading && <div className="col-span-full text-xl my-5 text-center">No Movie found</div>}
                 {movies.map((movie: Movie, i: number) => {
                     return <MovieCard key={i} movie={movie} />
                 })}

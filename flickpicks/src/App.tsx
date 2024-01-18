@@ -1,4 +1,3 @@
-
 import { RouterProvider, createBrowserRouter, redirect } from "react-router-dom"
 import Header from "./components/Navbar"
 import Auth from "./pages/auth/auth"
