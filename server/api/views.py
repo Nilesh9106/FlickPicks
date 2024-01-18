@@ -7,7 +7,47 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from .serializers import *
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.db.models import Q
 # Create your views here.
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def filterView(request):
+    genres = request.data.get("genres") #list of genres
+    languages = request.data.get("languages") # list of languages
+    status1 = request.data.get("status") # list of status of movie e.g. Released, Rumored, Post Production
+    sortBy = request.data.get("sortBy") # popularity, release_date, vote_average
+    order = request.data.get("order") 
+
+    if genres is None and languages is None and status1 is None and sortBy is None:
+        return Response({"status":"failed","message":"Invalid query"},status=status.HTTP_400_BAD_REQUEST)
+    # filter movies according to genres, languages, status and sort them sortBy
+    
+    queryset = Movie.objects.all()
+    if genres:
+        # Use Q objects to perform OR logic on genres
+        genre_filters = Q()
+        for genre in genres:
+            genre_filters |= Q(genres__icontains=genre)
+        queryset = queryset.filter(genre_filters)
+
+    # print(request.data)
+    if languages:
+        queryset = queryset.filter(spoken_languages__in=languages)
+
+    if status1:
+        queryset = queryset.filter(status__in=status1)
+
+    order_prefix = "" if order.lower() == "asc" else "-"
+    sort_criteria = f"{order_prefix}{sortBy}"
+
+    queryset = queryset.order_by(sort_criteria)
+
+    # Serialize the filtered and sorted queryset
+    serializers = MovieSerializer(queryset[:30], many=True)
+    
+    
+    return Response({'status':"success","movies":serializers.data},status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
