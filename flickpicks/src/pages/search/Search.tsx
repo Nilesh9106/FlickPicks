@@ -1,7 +1,7 @@
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, useDisclosure } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { AiFillFilter, AiOutlineArrowDown, AiOutlineArrowUp, AiOutlineSearch } from "react-icons/ai";
-import { getCall } from "../../components/api";
+import { getCall, postCall } from "../../components/api";
 import Loading from "../../components/Loading";
 import MovieCard from "../../components/MovieCard";
 
@@ -129,14 +129,15 @@ const Filter = ({ isOpen, onOpenChange, onFilter, filter, setFilter }: {
                                             <Select
                                                 placeholder="SortBy"
                                                 size="sm"
-                                                value={filter.sortBy}
+                                                selectedKeys={[filter.sortBy]}
                                                 selectionMode="single"
-                                                onSelect={(a) => {
-                                                    setFilter({ ...filter, sortBy: a.currentTarget.value })
+                                                onSelectionChange={(keys) => {
+
+                                                    setFilter({ ...filter, sortBy: (Array.from(keys) as string[])[0] });
                                                 }}
                                             >
                                                 {sortBy.map((genre) => {
-                                                    return <SelectItem key={genre}>{genre}</SelectItem>
+                                                    return <SelectItem key={genre} value={genre}>{genre}</SelectItem>
                                                 })}
 
                                             </Select>
@@ -201,8 +202,11 @@ export default function Search() {
         setLoading(false)
         setMovies(data.latest);
     }
-    const onFilter = () => {
-        console.log(filter);
+    const onFilter = async () => {
+        setLoading(true);
+        const data = await postCall("movies/filter", filter);
+        setMovies(data.movies);
+        setLoading(false);
     }
 
     useEffect(() => {

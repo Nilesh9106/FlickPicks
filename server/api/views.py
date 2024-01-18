@@ -14,10 +14,10 @@ from django.db.models import Q
 @permission_classes([AllowAny])
 def filterView(request):
     genres = request.data.get("genres") #list of genres
-    languages = request.data.get("languages") # list of languages
+    languages = request.data.get("language") # list of languages
     status1 = request.data.get("status") # list of status of movie e.g. Released, Rumored, Post Production
     sortBy = request.data.get("sortBy") # popularity, release_date, vote_average
-    order = request.data.get("order") 
+    ascending = bool(request.data.get("ascending")) 
 
     if genres is None and languages is None and status1 is None and sortBy is None:
         return Response({"status":"failed","message":"Invalid query"},status=status.HTTP_400_BAD_REQUEST)
@@ -38,13 +38,13 @@ def filterView(request):
     if status1:
         queryset = queryset.filter(status__in=status1)
 
-    order_prefix = "" if order.lower() == "asc" else "-"
+    order_prefix = "" if ascending else "-"
     sort_criteria = f"{order_prefix}{sortBy}"
 
     queryset = queryset.order_by(sort_criteria)
 
     # Serialize the filtered and sorted queryset
-    serializers = MovieSerializer(queryset[:30], many=True)
+    serializers = MovieSerializer(queryset[:30], many=True,context={"request":request})
     
     
     return Response({'status':"success","movies":serializers.data},status=status.HTTP_200_OK)
@@ -68,7 +68,14 @@ def allMovies(request):
     action = serializers.data
     serializers = MovieSerializer(bio,many=True,context={"request":request})
     bio = serializers.data
-    return Response({'status': 'success', "latest":latest,"action":action,"bio":bio}, status=status.HTTP_200_OK)
+    dict1 = {'status': 'success', "latest":latest,"action":action,"bio":bio}
+    if request.user.is_authenticated:
+        import random
+        recommendation = watch_recommend(request.user)
+        random.shuffle(recommendation)
+        dict1["recommendation"] = recommendation
+    
+    return Response(dict1, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
