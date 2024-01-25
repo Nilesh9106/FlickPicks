@@ -190,9 +190,11 @@ export default function Search() {
         ascending: false
     })
     const handleSearch = async () => {
-        console.log(query);
+        if (query.trim() == "") {
+            return;
+        }
         setLoading(true);
-        const data = await getCall(`movies?q=${query}`);
+        const data = await getCall(`movies?q=${query.trim()}`);
         setMovies(data.movies);
         setLoading(false);
     }
@@ -222,7 +224,7 @@ export default function Search() {
                     <AiFillFilter className="text-2xl" />
                 </Button>
                 <div className="flex-1">
-                    <Input type="search" value={query} onChange={(e) => setQuery(e.target.value)} size="sm" radius="md" className="" placeholder="Search Movie" variant="flat" />
+                    <Input type="search" isRequired value={query} onChange={(e) => setQuery(e.target.value)} size="sm" radius="md" className="" placeholder="Search Movie" variant="flat" />
                 </div>
                 <Button size="lg" isIconOnly onClick={handleSearch}>
                     <AiOutlineSearch className="text-2xl" />
