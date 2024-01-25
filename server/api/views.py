@@ -1,5 +1,4 @@
 from .funs import *
-from django.db.models import Q
 from datetime import date
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.response import Response
@@ -69,7 +68,7 @@ def allMovies(request):
     serializers = MovieSerializer(bio,many=True,context={"request":request})
     bio = serializers.data
     dict1 = {'status': 'success', "latest":latest,"action":action,"bio":bio}
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and WatchHistory.objects.filter(user=request.user).exists():
         import random
         recommendation = watch_recommend(request.user)
         random.shuffle(recommendation)
@@ -78,11 +77,6 @@ def allMovies(request):
     return Response(dict1, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def recommendMovies(request):
-    movies = watch_recommend(request.user)
-    return Response({"status":"success","movies":movies},status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -203,7 +197,9 @@ def logout(request):
     return Response({"status":"success",'message': 'Logout successful'}, status=status.HTTP_200_OK)
 
 
-
-
-
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def clearHistory(request):
+    WatchHistory.objects.filter(user=request.user).delete()
+    return Response({"status":"success",'message': 'History cleared'}, status=status.HTTP_200_OK)
 

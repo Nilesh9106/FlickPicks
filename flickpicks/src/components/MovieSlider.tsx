@@ -8,9 +8,11 @@ type Movie = {
     poster_path: string,
     release_date: string,
     genres: string,
+    isFavorite: boolean
 }
 
 export default function MovieSlider({ movies }: { movies: Movie[] }) {
+
     return (
         <>
             <Carousel
@@ -67,6 +69,8 @@ export default function MovieSlider({ movies }: { movies: Movie[] }) {
                 swipeable
             >
                 {movies.map((movie: Movie, i: number) => {
+                    // console.log(movie);
+
                     return (
                         <MovieCard key={i} movie={movie} />
                     )

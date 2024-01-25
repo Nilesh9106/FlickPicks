@@ -4,10 +4,10 @@ import { Outlet, Link, useNavigate } from "react-router-dom";
 import { SiGithub, SiTwitter } from "react-icons/si";
 import { AiOutlineSearch } from "react-icons/ai";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
-import {useTheme} from "next-themes"
+import { useTheme } from "next-themes"
 
 export default function Header() {
-    const {theme,setTheme} = useTheme()
+    const { theme, setTheme } = useTheme()
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const navigate = useNavigate();
     return (
@@ -44,21 +44,21 @@ export default function Header() {
                 </NavbarContent>
                 <NavbarContent justify="end" >
                     <NavbarItem>
-                        <Button as={Link} to={'/search'} isIconOnly>
+                        <Button as={Link} variant="faded" to={'/search'} isIconOnly>
                             <AiOutlineSearch className="text-2xl" />
                         </Button>
                     </NavbarItem>
                     <NavbarItem>
-                        {theme == "dark"?
-                        <Button onClick={()=>setTheme("light")} isIconOnly>
-                            <MdLightMode className="text-2xl" />
-                        </Button>
-                        :
-                        <Button onClick={()=>setTheme("dark")} isIconOnly>
-                            <MdDarkMode className="text-2xl" />
-                        </Button>
+                        {theme == "dark" ?
+                            <Button variant="faded" onClick={() => setTheme("light")} isIconOnly>
+                                <MdLightMode className="text-2xl" />
+                            </Button>
+                            :
+                            <Button variant="faded" onClick={() => setTheme("dark")} isIconOnly>
+                                <MdDarkMode className="text-2xl" />
+                            </Button>
                         }
-                    </NavbarItem>   
+                    </NavbarItem>
                     {localStorage.getItem("token") ? (
                         <NavbarItem>
                             <Button onClick={() => {
