@@ -61,7 +61,7 @@ def search_similar_movies(movie_id):
 def watch_recommend(user):
     movie_data = pd.DataFrame(list(Movie.objects.all().values()))
 
-    print(movie_data.info())
+    # print(movie_data.info())
     # Combine features into a single text feature
     movie_data['combined_features'] = (
         movie_data['title'] + ' ' +
@@ -97,7 +97,7 @@ def watch_recommend(user):
         recommended_movie_indices = similarity_scores.mean(axis=0).argsort()[::-1]
 
         # Display recommended movies
-        recommendations = movie_data.iloc[recommended_movie_indices[:30]].to_dict(orient='records')
+        recommendations = movie_data.iloc[recommended_movie_indices[:35]].to_dict(orient='records')
 
         return recommendations
     
@@ -107,6 +107,14 @@ def watch_recommend(user):
     
     for movie in recommendations:
         m = Movie.objects.get(id=movie['id'])
-        m.isFavorite = Favorite.objects.filter(user=user,movie=m).exists()
-        movies.append(model_to_dict(m))
+        flag = True
+        for k in watched:
+            
+            if(k.movie.id == m.id):
+                flag = False
+                break
+        if flag:
+            m.isFavorite = Favorite.objects.filter(user=user,movie=m).exists()
+            movies.append(model_to_dict(m))
+
     return movies

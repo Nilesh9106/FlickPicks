@@ -24,7 +24,7 @@ export default function Home() {
         // fetch movies from api
         setLoading(true)
         const data = await getCall('movies');
-        setRecommendation(data.recommendation)
+        setRecommendation(data.recommendation ? data.recommendation : undefined)
         setMovies(
             {
                 latest: data.latest,
@@ -46,7 +46,7 @@ export default function Home() {
             {!loading && (
                 <div className="sm:px-8 px-4">
                     {
-                        localStorage.getItem("token") && <div>
+                        localStorage.getItem("token") && recommendation && recommendation.length > 0 && <div>
                             <h3 className="text-2xl px-3 py-6 font-bold">Movies for you</h3>
                             <MovieSlider movies={recommendation} />
                         </div>
