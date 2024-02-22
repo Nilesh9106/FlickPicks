@@ -75,7 +75,7 @@ def allMovies(request):
         dict1["recommendation"] = recommendation
     
     return Response(dict1, status=status.HTTP_200_OK)
-
+    
 
 
 @api_view(['GET'])
@@ -135,7 +135,16 @@ def movieView(request,movie_id):
         recommendations.append(m)
 
     serializers = MovieSerializer(movie,context={"request":request})
-    return Response({"status":"success","movie":serializers.data,'recommendations':recommendations},status=status.HTTP_200_OK)
+
+    first = movie.production_companies.split('-')
+    movies_pro =[]
+    if(len(first) !=0):
+        first = first[0]
+        movies_pro = Movie.objects.filter(production_companies__icontains = first )
+        productions_ser = MovieSerializer(movies_pro,many=True,context={"request":request})
+        movies_pro = productions_ser.data
+    
+    return Response({"status":"success","movie":serializers.data,'recommendations':recommendations,'productions':movies_pro},status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

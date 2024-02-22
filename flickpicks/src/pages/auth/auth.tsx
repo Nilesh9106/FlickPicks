@@ -4,7 +4,6 @@ import { postCall } from "../../components/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-
 const Login = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
