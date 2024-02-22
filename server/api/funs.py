@@ -10,7 +10,6 @@ from django.forms.models import model_to_dict
 import os
 api_key = '3c82ec187c6088eb5840b98740de3c09'
 
-
 def search_similar_movies(movie_id):
     
     df = pd.DataFrame(list(Movie.objects.all().values()))
@@ -75,9 +74,6 @@ def watch_recommend(user):
     # Use CountVectorizer for text feature extraction
     count_vectorizer = CountVectorizer(stop_words='english')
     feature_matrix = count_vectorizer.fit_transform(movie_data['combined_features'])
-
-    # Calculate cosine similarity
-    cosine_similarity_matrix = cosine_similarity(feature_matrix, feature_matrix)
 
     # Function to recommend movies based on recently watched movies
     def recommend_movies(recently_watched_movies):

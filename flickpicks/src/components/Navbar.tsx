@@ -97,15 +97,15 @@ export default function Header() {
                         FlickPicks
                     </Link>
 
-                    <p className="text-sm text-neutral-600 dark:text-neutral-300">© Copyright 2021. All Rights Reserved.</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-300">© Copyright 2024. All Rights Reserved.</p>
 
                     <div className="flex -mx-2">
-                        <a href="#" className="mx-2 text-neutral-600 transition-colors duration-300 dark:text-neutral-300 hover:text-emerald-500 dark:hover:text-emerald-400" aria-label="Reddit">
+                        <Link to="https://github.com/Nilesh9106/FlickPicks" target="_blank" className="mx-2 text-neutral-600 transition-colors duration-300 dark:text-neutral-300 hover:text-emerald-500 dark:hover:text-emerald-400" aria-label="Reddit">
                             <SiGithub />
-                        </a>
-                        <a href="#" className="mx-2 text-neutral-600 transition-colors duration-300 dark:text-neutral-300 hover:text-emerald-500 dark:hover:text-emerald-400" aria-label="Reddit">
+                        </Link>
+                        <Link to="https://twitter.com/thenileshdarji" target="_blank" className="mx-2 text-neutral-600 transition-colors duration-300 dark:text-neutral-300 hover:text-emerald-500 dark:hover:text-emerald-400" aria-label="Reddit">
                             <SiTwitter />
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </footer>

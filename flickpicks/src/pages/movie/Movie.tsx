@@ -30,15 +30,16 @@ type MovieDetails = {
     title: string,
     poster_path: string,
     release_date: string,
-    genres: [{ name: string }],
+    genres: string,
     isFavorite: boolean,
     overview: string,
     runtime: number,
     tagline: string,
+    credit:string,
     budget: number,
     revenue: number,
-    keywords: [{ name: string }],
-    production_companies: [{ name: string }],
+    keywords: string,
+    production_companies: string,
     status: string,
     vote_average: number,
     videos: { results: [Video] }
@@ -48,6 +49,8 @@ export default function Movie() {
     const [loading, setLoading] = useState(false)
     const [movie, setMovie] = useState<MovieDetails>()
     const [recommendations, setRecommendations] = useState([] as Movie[])
+    const [production, setProduction] = useState([] as Movie[])
+    
     const { id } = useParams()
     useEffect(() => {
         fetchMovie();
@@ -59,9 +62,10 @@ export default function Movie() {
         const data = await getCall(`movies/${id}`);
         if (data.status == "success") {
             setRecommendations(data.recommendations);
-            const movies = await tmdbGetCall(`movie/${id}`, "append_to_response=videos");
-            console.log(movies);
-            setMovie(movies);
+            // const movies = await tmdbGetCall(`movie/${id}`, "append_to_response=videos");
+            // console.log(movies);
+            setMovie(data.movie);
+            setProduction(data.productions)
         }
         console.info("Movie fetched");
         setLoading(false);
@@ -90,7 +94,7 @@ export default function Movie() {
                         src={"https://image.tmdb.org/t/p/original" + movie?.poster_path}
                     />
                     {
-                        movie && movie.videos.results.length > 0 && <div className="">
+                        movie && movie.videos?.results.length > 0 && <div className="">
                             <h2 className="md:hidden text-xl my-2">Video</h2>
                             <iframe src={`https://www.youtube.com/embed/${movie.videos.results[0]?.key}`} className="rounded-md sm:h-[20rem] xl:h-[25rem] max-sm:w-full aspect-video" ></iframe>
                         </div>
@@ -103,19 +107,23 @@ export default function Movie() {
 
                     <hr className="my-1" />
                     <h2 className="text-xl my-2">Genres</h2>
-                    <p className="text-medium max-sm:text-sm ">{movie?.genres.map((genre) => `${genre.name}, `)}</p>
+                    <p className="text-medium max-sm:text-sm ">{movie?.genres.split('-').map((genre) => `${genre}, `)}</p>
+
+                    <hr className="my-1" />
+                    <h2 className="text-xl my-2">Credits</h2>
+                    <p className="text-medium max-sm:text-sm ">{movie?.credit.split('-').map((genre) => `${genre}, `)}</p>
 
                     {
                         movie?.keywords && <>
                             <hr className="my-1" />
                             <h2 className="text-xl my-2">Keywords</h2>
-                            <p className="text-medium max-sm:text-sm ">{movie?.keywords.map((keyword) => `${keyword.name}, `)}</p>
+                            <p className="text-medium max-sm:text-sm ">{movie?.keywords.split('-').map((keyword) => `${keyword}, `)}</p>
                         </>
                     }
 
                     <hr className="my-1" />
                     <h2 className="text-xl my-2">Production Companies</h2>
-                    <p className="text-medium max-sm:text-sm ">{movie?.production_companies.map((company) => `${company.name}, `)}</p>
+                    <p className="text-medium max-sm:text-sm ">{movie?.production_companies.split('-').map((company) => `${company}, `)}</p>
 
                     <hr className="my-1" />
                     <h2 className="text-xl my-2">Status</h2>
@@ -138,6 +146,12 @@ export default function Movie() {
                     <h3 className="text-2xl px-3 py-6 font-bold line-clamp-1">Movies Like {movie?.title}</h3>
                     <MovieSlider movies={recommendations} />
                 </div>
+                {
+                    production?.length > 0 && <div>
+                    <h3 className="text-2xl px-3 py-6 font-bold line-clamp-1">More from {movie?.production_companies.split('-')[0]}</h3>
+                    <MovieSlider movies={production} />
+                </div>
+                }
             </div>
         )
 
