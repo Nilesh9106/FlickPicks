@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
-import { getCall, tmdbGetCall } from "../../components/api";
+import { getCall } from "../../components/api";
 import { AiFillStar } from "react-icons/ai";
 import { Image } from "@nextui-org/react";
 import MovieSlider from "../../components/MovieSlider";
@@ -53,14 +53,17 @@ export default function Movie() {
     
     const { id } = useParams()
     useEffect(() => {
+        if(loading)return;
+        setLoading(true);
         fetchMovie();
-        console.info("Movie fetching...");
+        
     }, [id])
 
     const fetchMovie = async () => {
-        setLoading(true);
+        
+        console.info("Movie fetching...");
         const data = await getCall(`movies/${id}`);
-        if (data.status == "success") {
+        if (data?.status == "success") {
             setRecommendations(data.recommendations);
             // const movies = await tmdbGetCall(`movie/${id}`, "append_to_response=videos");
             // console.log(movies);
