@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from .serializers import *
+from django.db import OperationalError
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.db.models import Q
 # Create your views here.
@@ -121,18 +122,12 @@ def movieView(request,movie_id):
     if movie is None:
         return Response({"status":"failed","message":"movie not found"},status=status.HTTP_404_NOT_FOUND)
     if(request.user.is_authenticated):
-        watch = WatchHistory.objects.filter(user=request.user,movie=Movie.objects.get(id=movie_id)).first()
-        if watch:
-            watch.added = date.today()
-            watch.save()
-        else:
-            WatchHistory.objects.create(user=request.user,movie=Movie.objects.get(id=movie_id))
+        try:
+            WatchHistory.objects.update_or_create(user=request.user,movie=movie,defaults={'added':date.today()})
+        except OperationalError:
+            pass
     data = search_similar_movies(movie_id)
-    recommendations = []
-    for m1 in data['recommendations']:
-        m = Movie.objects.get(id=m1['id'])
-        m = MovieSerializer(m,context={"request":request}).data
-        recommendations.append(m)
+    recommendations = data['recommendations']
 
     serializers = MovieSerializer(movie,context={"request":request})
 
