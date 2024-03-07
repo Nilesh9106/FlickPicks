@@ -32,6 +32,7 @@ export default function MovieCard({ movie, onDelete }: { movie: Movie, onDelete?
                 </div>
 
                 <Button
+                    id="favorite-button"
                     variant="shadow"
                     isIconOnly={true}
                     onClick={async (e) => {
