@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer,CountVectorizer
 from sklearn.metrics.pairwise import linear_kernel,cosine_similarity
-import requests
 from .models import *
 from django.forms.models import model_to_dict
 import os
